@@ -14,7 +14,6 @@ import androidx.navigation.toRoute
 import com.example.myapplication.presentation.navigation.Destinations
 import com.example.myapplication.presentation.theme.MyApplicationTheme
 import com.example.myapplication.presentation.ui.screens.insert_screen.InsertScreen
-import com.example.myapplication.presentation.ui.screens.show_screen.ShowScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -36,13 +35,7 @@ class MainActivity : ComponentActivity() {
                     ) {
 
                         composable<Destinations.InsertScreen> {
-                            //InsertScreen(navController)
                             InsertScreen(navController)
-                        }
-
-                        composable<Destinations.ShowScreen> { navBackStackEntry ->
-                            val arguments = navBackStackEntry.toRoute<Destinations.ShowScreen>()
-                            ShowScreen(navController, arguments.data, arguments.message)
                         }
                     }
                 }

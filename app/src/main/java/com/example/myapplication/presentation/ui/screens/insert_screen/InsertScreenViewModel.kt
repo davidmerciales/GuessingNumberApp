@@ -1,12 +1,8 @@
 package com.example.myapplication.presentation.ui.screens.insert_screen
 
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import com.example.myapplication.presentation.navigation.Destinations
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -51,7 +47,6 @@ class InsertScreenViewModel @Inject constructor(): ViewModel() {
             }
             state.message = message
             state.isShowDialog = true
-            //navController.navigate(Destinations.ShowScreen(convertedInput, state.message))
         } catch (e: NumberFormatException) {
             state.message = "Invalid number format"
             state.isInvalid = true
