@@ -1,17 +1,24 @@
 package com.example.myapplication.presentation.ui.screens.insert_screen
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -31,19 +38,47 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.example.myapplication.presentation.navigation.Destinations
+import com.example.myapplication.presentation.ui.screens.common.BasicAlertDialog
 
 @Preview
 @Composable
 fun InsertScreen(
-    //navController: NavController
+    navController: NavController,
+    viewModel: InsertScreenViewModel = hiltViewModel()
 ) {
-    val context = LocalContext.current
-    var inputText by remember { mutableStateOf("0") }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        if (viewModel.state.isShowDialog) {
+            BoxWithConstraints(modifier = Modifier
+                .fillMaxSize()
+                .zIndex(1f)
+                .background(Color.Black.copy(alpha = .7f))
+                .align(Alignment.Center)
+                .clickable { }) {
+                val minDimension = minOf(maxWidth, maxHeight)
+
+                BasicAlertDialog(
+                    modifier = Modifier
+                        .zIndex(1f)
+                        .height(minDimension * 0.45f)
+                        .width(minDimension * 0.8f),
+                    title = "Your guess is: ${viewModel.state.inputNumber}",
+                    message = viewModel.state.message,
+                    positiveButtonText = "OK",
+                    positiveClick = {
+                        viewModel.state.isShowDialog = false
+                    }
+                )
+            }
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize(),
@@ -83,9 +118,21 @@ fun InsertScreen(
             TextField(
                 modifier = Modifier
                     .fillMaxWidth(0.88f),
-                value = inputText,
-                onValueChange = { inputText = it },
+                value = viewModel.state.inputNumber,
+                onValueChange = { viewModel.state.inputNumber = it},
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                singleLine = true,
+                leadingIcon = {},
+                trailingIcon = {
+                    if (viewModel.state.isInvalid) {
+                        Icon(
+                            imageVector = Icons.Default.Warning,
+                            contentDescription = "Error",
+                            tint = Color.Red
+                        )
+                    }
+                },
+                isError = viewModel.state.isInvalid,
                 textStyle = TextStyle().copy(textAlign = TextAlign.Center),
                 colors = TextFieldDefaults.colors(
                     unfocusedContainerColor = Color.Transparent,
@@ -101,24 +148,14 @@ fun InsertScreen(
                     .height(50.dp)
                     .background(Color(0xFF868686), RoundedCornerShape(3.dp))
                     .clickable {
-                        if (inputText.isEmpty()) return@clickable
+                        if (viewModel.state.inputNumber.isEmpty()) return@clickable
 
-                        try {
-                            val textToInt = inputText.toInt()
-
-                            if (textToInt in 0..100) {
-                                //navController.navigate(Destinations.ShowScreen(textToInt))
-                            } else {
-                                Toast.makeText(
-                                    context,
-                                    "The number should be between 0 and 100",
-                                    Toast.LENGTH_LONG
-                                ).show()
-                            }
-                        } catch (e: NumberFormatException) {
-                            Toast.makeText(context, "Invalid number format", Toast.LENGTH_LONG)
-                                .show()
-                        }
+                        viewModel.setEvent(
+                            InsertScreenContract.InsertScreenEvent.OnButtonOkClick(
+                                viewModel.state.inputNumber,
+                                navController
+                            )
+                        )
                     },
                 contentAlignment = Alignment.Center
             ) {

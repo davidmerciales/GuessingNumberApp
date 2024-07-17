@@ -10,13 +10,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
 @Composable
 fun ShowScreen(
     navController: NavController,
-    data: Int?
+    data: Int?,
+    message: String?
 ) {
 
     Column(
@@ -26,7 +30,18 @@ fun ShowScreen(
         verticalArrangement = Arrangement.Center
     ) {
 
-        Text(text = data.toString())
+        Text(text = message?:"",
+            style = TextStyle(
+                fontSize = 35.sp,
+                color = Color.Black
+            )
+        )
+
+        Text(text = if (data == -1) "" else data.toString(),
+            style = TextStyle(
+                fontSize = 20.sp,
+                color = Color.Black
+            ))
 
         Spacer(modifier = Modifier.height(30.dp))
 

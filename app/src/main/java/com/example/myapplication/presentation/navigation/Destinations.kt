@@ -9,5 +9,5 @@ sealed class Destinations {
     data object InsertScreen : Destinations()
 
     @Serializable
-    data class ShowScreen(val data: Int) : Destinations()
+    data class ShowScreen(val data: Int, val message: String) : Destinations()
 }
