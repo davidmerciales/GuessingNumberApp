@@ -45,6 +45,7 @@ class InsertScreenViewModel @Inject constructor(): ViewModel() {
                 convertedInput > state.generatedNumber -> "The number is greater than the unknown number"
                 else -> {
                     generateNumber()
+                    state.inputNumber = ""
                     "Congratulations you are correct!"
                 }
             }
