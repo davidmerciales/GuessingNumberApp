@@ -58,7 +58,7 @@ fun CommonAlertDialog(
                 ) {
                     title?.let { it() }
 
-                    Spacer(modifier = Modifier.height(h.times(0.02f)))
+                    Spacer(modifier = Modifier.height(h.times(0.01f)))
                     content()
 
                     Spacer(modifier = Modifier.height(h.times(0.1f)))
